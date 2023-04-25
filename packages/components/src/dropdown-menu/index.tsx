@@ -58,11 +58,11 @@ function DropdownMenu( dropdownMenuProps: DropdownMenuProps ) {
 	}
 
 	// Normalize controls to nested array of objects (sets of controls)
-	let controlSets;
+	let controlSets: NonNullable< typeof controls >[];
 	if ( controls?.length ) {
-		controlSets = controls;
-		if ( ! Array.isArray( controlSets[ 0 ] ) ) {
-			controlSets = [ controlSets ];
+		const controlSetsArray = controls;
+		if ( ! Array.isArray( controlSetsArray[ 0 ] ) ) {
+			controlSets = [ controlSetsArray ];
 		}
 	}
 	const mergedPopoverProps = mergeProps(
