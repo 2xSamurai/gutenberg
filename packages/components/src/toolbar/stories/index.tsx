@@ -36,6 +36,7 @@ import {
 	ToolbarDropdownMenu,
 } from '..';
 import DropdownMenu from '../../dropdown-menu';
+import type { DropdownMenuProps } from '../../dropdown-menu/types';
 
 const meta: ComponentMeta< typeof Toolbar > = {
 	title: 'Components/Toolbar',
@@ -82,32 +83,29 @@ Default.args = {
 			</ToolbarGroup>
 			<ToolbarGroup>
 				<ToolbarItem>
-					{
-						// @ts-expect-error TODO: Remove when ToolbarItem/DropdownMenu is typed
-						( toggleProps ) => (
-							<DropdownMenu
-								hasArrowIndicator
-								icon={ alignLeft }
-								label="Align"
-								controls={ [
-									{
-										icon: alignLeft,
-										title: 'Align left',
-										isActive: true,
-									},
-									{
-										icon: alignCenter,
-										title: 'Align center',
-									},
-									{
-										icon: alignRight,
-										title: 'Align right',
-									},
-								] }
-								toggleProps={ toggleProps }
-							/>
-						)
-					}
+					{ ( toggleProps: DropdownMenuProps[ 'toggleProps' ] ) => (
+						<DropdownMenu
+							// NTS: `hasArrowIndicator` was removed in #19344
+							icon={ alignLeft }
+							label="Align"
+							controls={ [
+								{
+									icon: alignLeft,
+									title: 'Align left',
+									isActive: true,
+								},
+								{
+									icon: alignCenter,
+									title: 'Align center',
+								},
+								{
+									icon: alignRight,
+									title: 'Align right',
+								},
+							] }
+							toggleProps={ toggleProps }
+						/>
+					) }
 				</ToolbarItem>
 			</ToolbarGroup>
 			<ToolbarGroup>
