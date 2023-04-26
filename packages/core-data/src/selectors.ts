@@ -38,6 +38,7 @@ export interface State {
 	entities: EntitiesState;
 	themeBaseGlobalStyles: Record< string, Object >;
 	themeGlobalStyleVariations: Record< string, string >;
+	themeGlobalStyleRevisions: Record< number, Object >;
 	undo: UndoState;
 	userPermissions: Record< string, boolean >;
 	users: UserState;
@@ -1233,4 +1234,24 @@ export function getBlockPatterns( state: State ): Array< any > {
  */
 export function getBlockPatternCategories( state: State ): Array< any > {
 	return state.blockPatternCategories;
+}
+
+/**
+ * Returns the revisions of the current global styles theme.
+ *
+ * @param state Data state.
+ *
+ * @return The current global styles.
+ */
+export function __experimentalGetCurrentThemeGlobalStylesRevisions(
+	state: State
+): Object | null {
+	const currentGlobalStylesId =
+		__experimentalGetCurrentGlobalStylesId( state );
+
+	if ( ! currentGlobalStylesId ) {
+		return null;
+	}
+
+	return state.themeGlobalStyleRevisions[ currentGlobalStylesId ];
 }

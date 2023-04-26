@@ -14,7 +14,7 @@ import {
 	privateApis as blockEditorPrivateApis,
 	store as blockEditorStore,
 } from '@wordpress/block-editor';
-import { __ } from '@wordpress/i18n';
+import { __, sprintf, _n } from '@wordpress/i18n';
 import { store as preferencesStore } from '@wordpress/preferences';
 import { moreVertical } from '@wordpress/icons';
 import { store as coreStore } from '@wordpress/core-data';
@@ -42,6 +42,7 @@ import StyleBook from '../style-book';
 import ScreenCSS from './screen-css';
 import { unlock } from '../../private-apis';
 import ScreenEffects from './screen-effects';
+import ScreenRevisions from './screen-revisions';
 import { store as editSiteStore } from '../../store';
 
 const SLOT_FILL_NAME = 'GlobalStylesMenu';
@@ -50,7 +51,7 @@ const { Slot: GlobalStylesMenuSlot, Fill: GlobalStylesMenuFill } =
 
 function GlobalStylesActionMenu() {
 	const { toggle } = useDispatch( preferencesStore );
-	const { canEditCSS } = useSelect( ( select ) => {
+	const { canEditCSS, revisionsCount } = useSelect( ( select ) => {
 		const { getEntityRecord, __experimentalGetCurrentGlobalStylesId } =
 			select( coreStore );
 
@@ -62,12 +63,23 @@ function GlobalStylesActionMenu() {
 		return {
 			canEditCSS:
 				!! globalStyles?._links?.[ 'wp:action-edit-css' ] ?? false,
+			revisionsCount:
+				globalStyles?._links?.[ 'version-history' ]?.[ 0 ]?.count ?? 0,
 		};
 	}, [] );
 	const { useGlobalStylesReset } = unlock( blockEditorPrivateApis );
 	const [ canReset, onReset ] = useGlobalStylesReset();
 	const { goTo } = useNavigator();
+	const { setEditorCanvasContainerView } = unlock(
+		useDispatch( editSiteStore )
+	);
 	const loadCustomCSS = () => goTo( '/css' );
+	const loadRevisions = () => {
+		goTo( '/revisions' );
+		setEditorCanvasContainerView( 'global-styles-revisions' );
+	};
+	const hasRevisions = revisionsCount >= 2;
+
 	return (
 		<GlobalStylesMenuFill>
 			<DropdownMenu
@@ -89,6 +101,22 @@ function GlobalStylesActionMenu() {
 								{
 									title: __( 'Additional CSS' ),
 									onClick: loadCustomCSS,
+								},
+						  ]
+						: [] ),
+					...( hasRevisions
+						? [
+								{
+									title: sprintf(
+										/* translators: %d: number of revisions */
+										_n(
+											'%d Revision',
+											'%d Revisions',
+											revisionsCount
+										),
+										revisionsCount
+									),
+									onClick: loadRevisions,
 								},
 						  ]
 						: [] ),
@@ -227,6 +255,10 @@ function ContextScreens( { name, parentMenu = '', variation = '' } ) {
 
 			<GlobalStylesNavigationScreen path={ parentMenu + '/css' }>
 				<ScreenCSS name={ name } />
+			</GlobalStylesNavigationScreen>
+
+			<GlobalStylesNavigationScreen path={ parentMenu + '/revisions' }>
+				<ScreenRevisions name={ name } />
 			</GlobalStylesNavigationScreen>
 
 			{ !! blockStyleVariations?.length && (
