@@ -129,36 +129,11 @@ function gutenberg_resolve_assets_override() {
 
 	$scripts = ob_get_clean();
 
-	/*
-	 * Generate font @font-face styles for the site editor iframe.
-	 * Use the registered font families for printing.
-	 */
+	// Print `@font-face` styles.
 	if ( class_exists( 'WP_Fonts' ) ) {
-		$registered = $wp_fonts->get_registered_font_families();
-		if ( ! empty( $registered ) ) {
-			$registered = $wp_fonts->get_registered_font_families();
-			if ( ! empty( $registered ) ) {
-		}
 		ob_start();
 		wp_print_fonts( false, true );
 		$styles .= ob_get_clean();
-		$wp_fonts   = wp_fonts();
-		$registered = $wp_fonts->get_registered_font_families();
-		if ( ! empty( $registered ) ) {
-			$queue = $wp_fonts->queue;
-			$done  = $wp_fonts->done;
-
-			$wp_fonts->done  = array();
-			$wp_fonts->queue = $registered;
-
-			ob_start();
-			$wp_fonts->do_items();
-			$styles .= ob_get_clean();
-
-			// Reset the Web Fonts API.
-			$wp_fonts->done  = $done;
-			$wp_fonts->queue = $queue;
-		}
 	}
 
 	return array(
