@@ -176,28 +176,54 @@ if ( ! function_exists( 'wp_print_fonts' ) ) {
 	 *
 	 * @since X.X.X
 	 *
-	 * @param string|string[]|false $handles Optional. Items to be processed: queue (false),
-	 *                                       single item (string), or multiple items (array of strings).
-	 *                                       Default false.
+	 * @param string|string[]|false $handles            Optional. Items to be processed: queue (false),
+	 *                                                  single item (string), or multiple items (array of strings).
+	 *                                                  Default false.
+	 * @param bool                  $for_iframed_editor Optional. Print fonts for the iframed editor.
+	 *                                                  Default false.
 	 * @return array|string[] Array of font handles that have been processed.
 	 *                        An empty array if none were processed.
 	 */
-	function wp_print_fonts( $handles = false ) {
-		global $wp_fonts;
+	function wp_print_fonts( $handles = false, $for_iframed_editor = false ) {
+		global $pagenow;
 
-		if ( empty( $handles ) ) {
-			$handles = false;
+		$wp_fonts   = wp_fonts();
+		$registered = $wp_fonts->get_registered_font_families();
+
+		// Nothing to print.
+		if ( ! empty( $registered ) ) {
+			return array();
 		}
 
-		_wp_scripts_maybe_doing_it_wrong( __FUNCTION__ );
+		$is_site_editor = 'site-editor.php' === $pagenow;
 
-		if ( ! ( $wp_fonts instanceof WP_Fonts ) ) {
-			if ( ! $handles ) {
-				return array(); // No need to instantiate if nothing is there.
+		/*
+		 * Set up for the iframed editor.
+		 * 1. Reset done.
+		 * 2. If in Site Editor, print all registered fonts.
+		 *    Why? For user previewing and font selection.
+		 * 3. Else, print all enqueued fonts.
+		 */
+		if ( $for_iframed_editor ) {
+			$done           = $wp_fonts->done;
+			$wp_fonts->done = array();
+			if ( $is_site_editor ) {
+				$queue           = $wp_fonts->queue;
+				$wp_fonts->queue = $registered;
 			}
 		}
 
-		return wp_fonts()->do_items( $handles );
+		$printed_fonts = wp_fonts()->do_items( $handles );
+
+		// For the iframed editor, reset the Fonts API.
+		if ( $for_iframed_editor ) {
+			$wp_fonts->done  = $done;
+			if ( $is_site_editor ) {
+				$wp_fonts->queue = $queue;
+			}
+		}
+
+		return $printed_fonts;
 	}
 }
 
