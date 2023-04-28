@@ -1,4 +1,9 @@
 <?php
+
+if ( class_exists( 'WP_HTML_Span' ) ) {
+	return;
+}
+
 /**
  * HTML Span: Represents a textual span inside an HTML document.
  *
