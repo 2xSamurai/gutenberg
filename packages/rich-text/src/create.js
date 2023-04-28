@@ -142,7 +142,7 @@ function toFormat( { tagName, attributes } ) {
  *                                                space characters.
  * @param {boolean} [$1.__unstableIsEditableTree]
  *
- * @return {RichTextValue} A rich text value.
+ * @return {import('../types').RichTextValue} A rich text value.
  */
 export function create( {
 	element,

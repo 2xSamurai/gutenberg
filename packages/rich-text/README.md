@@ -181,7 +181,7 @@ _Parameters_
 
 _Returns_
 
--   `RichTextValue`: A rich text value.
+-   `import('../types').RichTextValue`: A rich text value.
 
 ### getActiveFormat
 
