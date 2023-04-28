@@ -129,11 +129,10 @@ if ( ! function_exists( 'filter_block_pattern_response' ) ) {
 	/**
 	 * Add the `block_types` value into the API response.
 	 *
-	 * @param WP_REST_Response $response The response object.
-	 * @param object $raw_pattern The unprepared pattern.
+	 * @param WP_REST_Response $response    The response object.
+	 * @param object           $raw_pattern The unprepared pattern.
 	 *
 	 * @since 6.2.0 Added 'block_types' property.
-	 *
 	 */
 	function filter_block_pattern_response( $response, $raw_pattern ) {
 		$data                = $response->get_data();
