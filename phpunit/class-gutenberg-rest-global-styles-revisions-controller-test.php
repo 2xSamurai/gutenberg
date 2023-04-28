@@ -98,7 +98,7 @@ class Gutenberg_REST_Global_Styles_Revisions_Controller_Test extends WP_Test_RES
 		// Dates.
 		$this->assertArrayHasKey( 'date', $data[0], 'Check that an date key exists' );
 		$this->assertArrayHasKey( 'date_gmt', $data[0], 'Check that an date_gmt key exists' );
-		$this->assertArrayHasKey( 'date_display', $data[0], 'Check that an date_display key exists' );
+		$this->assertArrayHasKey( 'date_human_time_diff', $data[0], 'Check that an date_human_time_diff key exists' );
 		$this->assertArrayHasKey( 'modified', $data[0], 'Check that an modified key exists' );
 		$this->assertArrayHasKey( 'modified_gmt', $data[0], 'Check that an modified_gmt key exists' );
 		$this->assertArrayHasKey( 'modified_gmt', $data[0], 'Check that an modified_gmt key exists' );
@@ -163,7 +163,7 @@ class Gutenberg_REST_Global_Styles_Revisions_Controller_Test extends WP_Test_RES
 		$this->assertArrayHasKey( 'author_avatar_url', $properties, 'Schema properties array does not have "author_avatar_url" key' );
 		$this->assertArrayHasKey( 'date', $properties, 'Schema properties array does not have "date" key' );
 		$this->assertArrayHasKey( 'date_gmt', $properties, 'Schema properties array does not have "date_gmt" key' );
-		$this->assertArrayHasKey( 'date_display', $properties, 'Schema properties array does not have "date_display" key' );
+		$this->assertArrayHasKey( 'date_human_time_diff', $properties, 'Schema properties array does not have "date_human_time_diff" key' );
 		$this->assertArrayHasKey( 'modified', $properties, 'Schema properties array does not have "modified" key' );
 		$this->assertArrayHasKey( 'modified_gmt', $properties, 'Schema properties array does not have "modified_gmt" key' );
 	}

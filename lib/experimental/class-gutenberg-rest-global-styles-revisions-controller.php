@@ -124,11 +124,9 @@ class Gutenberg_REST_Global_Styles_Revisions_Controller extends WP_REST_Controll
 
 		// Builds human-friendly date.
 		$now_gmt      = time();
-		$modified     = strtotime( $item->post_modified );
 		$modified_gmt = strtotime( $item->post_modified_gmt . ' +0000' );
 		/* translators: %s: Human-readable time difference. */
-		$time_ago   = sprintf( __( '%s ago', 'gutenberg' ), human_time_diff( $modified_gmt, $now_gmt ) );
-		$date_short = date_i18n( _x( 'j M @ H:i', 'revision date short format', 'gutenberg' ), $modified );
+		$time_ago = sprintf( __( '%s ago', 'gutenberg' ), human_time_diff( $modified_gmt, $now_gmt ) );
 
 		// Prepares item data.
 		$data   = array();
@@ -155,9 +153,8 @@ class Gutenberg_REST_Global_Styles_Revisions_Controller extends WP_REST_Controll
 			$data['date'] = $item->post_date;
 		}
 
-		if ( rest_is_field_included( 'date_display', $fields ) ) {
-			/* translators: 1: Human-readable time difference, 2: short date combined to show rendered revision date. */
-			$data['date_display'] = sprintf( __( '%1$s (%2$s)', 'gutenberg' ), $time_ago, $date_short );
+		if ( rest_is_field_included( 'date_human_time_diff', $fields ) ) {
+			$data['date_human_time_diff'] = $time_ago;
 		}
 
 		if ( rest_is_field_included( 'date_gmt', $fields ) ) {
@@ -218,71 +215,71 @@ class Gutenberg_REST_Global_Styles_Revisions_Controller extends WP_REST_Controll
 				 * Adds settings and styles from the WP_REST_Revisions_Controller item fields.
 				 * Leaves out GUID as global styles shouldn't be accessible via URL.
 				 */
-				'author'              => array(
+				'author'               => array(
 					'description' => __( 'The ID for the author of the revision.', 'gutenberg' ),
 					'type'        => 'integer',
 					'context'     => array( 'view', 'edit', 'embed' ),
 				),
-				'date'                => array(
+				'date'                 => array(
 					'description' => __( "The date the revision was published, in the site's timezone.", 'gutenberg' ),
 					'type'        => 'string',
 					'format'      => 'date-time',
 					'context'     => array( 'view', 'edit', 'embed' ),
 				),
-				'date_gmt'            => array(
+				'date_gmt'             => array(
 					'description' => __( 'The date the revision was published, as GMT.', 'gutenberg' ),
 					'type'        => 'string',
 					'format'      => 'date-time',
 					'context'     => array( 'view', 'edit' ),
 				),
-				'id'                  => array(
+				'id'                   => array(
 					'description' => __( 'Unique identifier for the revision.', 'gutenberg' ),
 					'type'        => 'integer',
 					'context'     => array( 'view', 'edit', 'embed' ),
 				),
-				'modified'            => array(
+				'modified'             => array(
 					'description' => __( "The date the revision was last modified, in the site's timezone.", 'gutenberg' ),
 					'type'        => 'string',
 					'format'      => 'date-time',
 					'context'     => array( 'view', 'edit' ),
 				),
-				'modified_gmt'        => array(
+				'modified_gmt'         => array(
 					'description' => __( 'The date the revision was last modified, as GMT.', 'gutenberg' ),
 					'type'        => 'string',
 					'format'      => 'date-time',
 					'context'     => array( 'view', 'edit' ),
 				),
-				'parent'              => array(
+				'parent'               => array(
 					'description' => __( 'The ID for the parent of the revision.', 'gutenberg' ),
 					'type'        => 'integer',
 					'context'     => array( 'view', 'edit', 'embed' ),
 				),
 
 				// Adds custom global styles revisions schema.
-				'author_display_name' => array(
+				'author_display_name'  => array(
 					'description' => __( 'The display name of the author.', 'gutenberg' ),
 					'type'        => 'string',
 					'context'     => array( 'view', 'edit' ),
 				),
 
-				'author_avatar_url'   => array(
+				'author_avatar_url'    => array(
 					'description' => __( 'A URL to the avatar image of the author', 'gutenberg' ),
 					'type'        => 'string',
 					'context'     => array( 'view', 'edit' ),
 				),
 
-				'date_display'        => array(
-					'description' => __( 'A human-friendly rendering of the date', 'gutenberg' ),
+				'date_human_time_diff' => array(
+					'description' => __( 'A human-friendly rendering of time elapsed since the last modification', 'gutenberg' ),
 					'type'        => 'string',
 					'context'     => array( 'view', 'edit' ),
 				),
 				// Adds settings and styles from the WP_REST_Global_Styles_Controller parent schema.
-				'styles'              => array(
+				'styles'               => array(
 					'description' => __( 'Global styles.', 'gutenberg' ),
 					'type'        => array( 'object' ),
 					'context'     => array( 'view', 'edit' ),
 				),
-				'settings'            => array(
+				'settings'             => array(
 					'description' => __( 'Global settings.', 'gutenberg' ),
 					'type'        => array( 'object' ),
 					'context'     => array( 'view', 'edit' ),
